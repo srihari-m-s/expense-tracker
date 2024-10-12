@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
+import { hc } from "hono/client";
 
 const fakeExpenses: Array<Expense> = [
   { id: 1, title: "Games", amount: 1299 },

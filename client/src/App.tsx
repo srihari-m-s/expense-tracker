@@ -1,23 +1,25 @@
-import { useEffect } from "react";
-
-import { expensesApi } from "./api/index.ts";
+import { useQuery } from "@tanstack/react-query";
+import { EXPENSES } from "./api/queryKeys";
+import { expensesApi } from "./api/expenses";
 
 function App() {
-  useEffect(() => {
-    fetch("/api/expenses/total-spent");
-    async function fetchTotal() {
-      const res = await expensesApi["total-spent"].$get();
+  const { data, error } = useQuery({
+    queryKey: EXPENSES.totalSpent,
+    queryFn: async () => {
+      const res = await expensesApi[":id{[0-10]+}"].$get({
+        param: { id: "1" },
+      });
       const data = await res.json();
-      console.log(data);
-    }
-
-    fetchTotal();
-  }, []);
+      return data;
+    },
+  });
 
   return (
     <>
       <div className="container">
-        <h1 className="text-red-500">Hello</h1>
+        <h1 className="text-gray-300">{JSON.stringify(data, null, "10")}</h1>
+
+        <h1 className="text-red-300">{JSON.stringify(error, null, "10")}</h1>
       </div>
     </>
   );
