@@ -17,6 +17,7 @@ function App() {
   return (
     <>
       <div className="container">
+        <h1>Landing Page</h1>
         <h1 className="text-gray-300">{JSON.stringify(data, null, "10")}</h1>
 
         <h1 className="text-red-300">{JSON.stringify(error, null, "10")}</h1>
