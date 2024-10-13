@@ -1,7 +1,11 @@
 import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
-import { hc } from "hono/client";
+import { jwt } from "hono/jwt";
+import { PrivateApp } from "../types/middlewares";
+import { db } from "../db";
+import { expensesTable } from "../db/schema/expenses";
+import { eq } from "drizzle-orm";
 
 const fakeExpenses: Array<Expense> = [
   { id: 1, title: "Games", amount: 1299 },
@@ -19,12 +23,21 @@ type Expense = z.infer<typeof expenseSchema>;
 
 const createExpenseSchema = expenseSchema.omit({ id: true });
 
-const expenses = new Hono()
+const expenses = new Hono<PrivateApp>()
+  .use("/*", (c, next) => {
+    const jwtMiddleware = jwt({ secret: c.env.JWT_SECRET });
+    return jwtMiddleware(c, next);
+  })
   .get("/", async (c) => {
-    return c.json(fakeExpenses);
+    const expenses = await db
+      .select()
+      .from(expensesTable)
+      .where(eq(expensesTable.userId, "1"));
+
+    return c.json({ expenses: expenses });
   })
   .post("/", zValidator("json", createExpenseSchema), async (c) => {
-    const expense = await c.req.valid("json");
+    const expense = c.req.valid("json");
     const payload = { ...expense, id: fakeExpenses.length + 1 };
     fakeExpenses.push(payload);
     c.status(201);

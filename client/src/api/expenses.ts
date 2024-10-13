@@ -1,4 +1,4 @@
-import expenses from "@server/src/routes/expenses";
+import expenses from "@server/routes/expenses";
 import { hc } from "hono/client";
 
 const expensesApi = hc<typeof expenses>("/api/expenses");

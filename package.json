@@ -1,17 +1,21 @@
 {
   "name": "et",
-  "module": "server/src/index.ts",
+  "module": "server/index.ts",
   "scripts": {
-    "dev": "tsx watch server/src/index.ts"
+    "dev": "tsx watch server/index.ts",
+    "migrate": "npx drizzle-kit generate & npx drizzle-kit migrate"
   },
   "dependencies": {
     "@hono/node-server": "^1.13.1",
     "@hono/zod-validator": "^0.4.1",
+    "drizzle-orm": "^0.34.1",
     "hono": "^4.6.3",
+    "postgres": "^3.4.4",
     "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/node": "^20.11.17",
+    "drizzle-kit": "^0.25.0",
     "tsx": "^4.7.1"
   }
 }
