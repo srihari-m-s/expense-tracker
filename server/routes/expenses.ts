@@ -23,12 +23,17 @@ type Expense = z.infer<typeof expenseSchema>;
 
 const createExpenseSchema = expenseSchema.omit({ id: true });
 
-const expenses = new Hono<PrivateApp>()
+const expenses = new Hono()
   .use("/*", (c, next) => {
-    const jwtMiddleware = jwt({ secret: c.env.JWT_SECRET });
+    const jwtMiddleware = jwt({
+      secret: process.env.JWT_SECRET!,
+      cookie: process.env.COOKIE_KEY,
+    });
     return jwtMiddleware(c, next);
   })
   .get("/", async (c) => {
+    const payload = c.get("jwtPayload");
+
     const expenses = await db
       .select()
       .from(expensesTable)

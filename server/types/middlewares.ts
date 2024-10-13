@@ -1,10 +1,5 @@
 import { JwtVariables } from "hono/jwt";
-import { SignatureKey } from "hono/utils/jwt/jws";
 
-export type Variables = JwtVariables;
+export type Variables = JwtVariables & { userId: string };
 
-export type Bindings = {
-  JWT_SECRET: SignatureKey;
-};
-
-export type PrivateApp = { Variables: Variables; Bindings: Bindings };
+export type PrivateApp = { Variables: Variables };
