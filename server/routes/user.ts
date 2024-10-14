@@ -4,6 +4,8 @@ import { env } from "hono/adapter";
 import { setCookie } from "hono/cookie";
 import { sign } from "hono/jwt";
 import { z } from "zod";
+import { db } from "../db";
+import { usersTable } from "../db/schema/users";
 
 const authSchema = z.object({
   username: z.string().email(),
@@ -13,8 +15,8 @@ const authSchema = z.object({
 type Auth = z.infer<typeof authSchema>;
 
 const userSchema = z.object({
-  first_name: z.string().min(2).max(100),
-  last_name: z.string().min(1).max(100).optional(),
+  firstName: z.string().min(2).max(100),
+  lastName: z.string().min(1).max(100).optional(),
   email: z.string().email(),
   mobile: z
     .string()
@@ -29,9 +31,14 @@ const resetPasswordSchema = z.object({
   email: z.string().email(),
 });
 
-const user = new Hono()
+const users = new Hono()
   .post("/sign_up", zValidator("json", userSchema), async (c) => {
     const userPayload = c.req.valid("json");
+
+    const newUser = await db.insert(usersTable).values(userPayload).returning();
+
+    c.status(201);
+    return c.json(userPayload);
   })
   .post("/login", zValidator("json", authSchema), async (c) => {
     const authPayload = c.req.valid("json");
@@ -54,4 +61,4 @@ const user = new Hono()
     }
   );
 
-export default user;
+export default users;

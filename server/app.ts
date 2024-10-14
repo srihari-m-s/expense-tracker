@@ -5,7 +5,7 @@ import "dotenv/config";
 
 import test from "./routes/test";
 import expenses from "./routes/expenses";
-import user from "./routes/user";
+import users from "./routes/user";
 
 const app = new Hono();
 
@@ -15,7 +15,7 @@ const apiRoutes = app.basePath("/api");
 
 apiRoutes.route("/test", test);
 apiRoutes.route("/expenses", expenses);
-apiRoutes.route("/user", user);
+apiRoutes.route("/users", users);
 
 app.use("*", serveStatic({ root: "./client/dist" }));
 app.use("*", serveStatic({ root: "./client/dist/index.html" }));

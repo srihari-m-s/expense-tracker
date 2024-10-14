@@ -15,6 +15,13 @@
       "when": 1728826637767,
       "tag": "0001_wealthy_black_panther",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1728929237487,
+      "tag": "0002_peaceful_the_order",
+      "breakpoints": true
     }
   ]
 }
